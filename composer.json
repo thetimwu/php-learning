@@ -1,0 +1,16 @@
+{
+  "name": "tim/php-learning",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "tim wu",
+      "email": "timwuuk@gmail.com"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Acme\\": "src"
+    }
+  }
+}
