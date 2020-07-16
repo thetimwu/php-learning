@@ -2,18 +2,6 @@
 
 require 'vendor/autoload.php';
 
-use Acme\Book;
-use Acme\Ebook;
-use Acme\Adapter;
-use Acme\BookInterface;
+use App\TurkeySub;
 
-class Person
-{
-  public function read(BookInterface $book)
-  {
-    $book->open();
-    $book->turnpage();
-  }
-}
-
-(new Person)->read(new Adapter(new Ebook));
+(new App\VeggieSub)->make();
