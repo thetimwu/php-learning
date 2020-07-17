@@ -2,42 +2,79 @@
 
 require 'vendor/autoload.php';
 
-class LogToFile implements Logger
+abstract class HomeChecker
 {
-  public function log($data)
+  protected $soccessor;
+
+  public abstract function check(HomeStatus $homeStatus);
+
+  public function setSuccessor(HomeChecker $homeChecker)
   {
-    var_dump('log to file ' . $data);
+    $this->soccessor = $homeChecker;
+  }
+
+  public function next(HomeStatus $homeStatus)
+  {
+    if ($this->soccessor) {
+      $this->soccessor->check($homeStatus);
+    }
   }
 }
 
-class LogToDatabase implements Logger
+
+class Lock extends HomeChecker
 {
-  public function log($data)
+  public function check(HomeStatus $homeStatus)
   {
-    var_dump('log to database ' . $data);
+    if (!$homeStatus->lock) {
+      throw new Exception('Door not locked! Abort, abort');
+    }
+
+    $this->next($homeStatus);
   }
 }
 
-class LogToXWebService implements Logger
+class Light extends HomeChecker
 {
-  public function log($data)
+  public function check(HomeStatus $homeStatus)
   {
-    var_dump('log to sass ' . $data);
+    if (!$homeStatus->light) {
+      throw new Exception('Light not switched off! Abort, abort');
+    }
+
+    $this->next($homeStatus);
   }
 }
 
-interface Logger
+class Alarm extends HomeChecker
 {
-  public function log($data);
-}
-
-class App
-{
-  public function useLog($data, Logger $logger = null)
+  public function check(HomeStatus $homeStatus)
   {
-    $newLogger = $logger ?: new LogToFile;
-    $newLogger->log($data);
+    if (!$homeStatus->alarm) {
+      throw new Exception('Alarm is off! Abort, abort');
+    }
+
+    $this->next($homeStatus);
   }
 }
 
-(new App)->useLog('hollo');
+class HomeStatus
+{
+  public $lock = true;
+  public $light = true;
+  public $alarm = true;
+}
+
+$lock = new Lock;
+$light = new light;
+$alarm = new alarm;
+
+$lock->setSuccessor($light);
+$light->setSuccessor($alarm);
+
+// var_dump($lock);
+
+
+$homeStatus = new HomeStatus;
+
+($lock)->check($homeStatus);
