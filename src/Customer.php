@@ -2,14 +2,11 @@
 
 namespace App;
 
-class Customer
-{
-    protected $type;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-    public function __construct($type)
-    {
-        $this->type = $type;
-    }
+class Customer extends Eloquent
+{
+    protected $guarded = [];
 
     public function getType()
     {

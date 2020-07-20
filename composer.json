@@ -7,7 +7,9 @@
       "email": "timwuuk@gmail.com"
     }
   ],
-  "require": {},
+  "require": {
+    "illuminate/database": "^7.20"
+  },
   "autoload": {
     "psr-4": {
       "App\\": "src"
