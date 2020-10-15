@@ -1,22 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+require __DIR__ . "/vendor/autoload.php";
 
-<body>
-    <?php
-    require __DIR__ . "/vendor/autoload.php";
+use App\core\Application;
 
-    use App\TestDBConn;
+$app = new Application();
 
-    $tdb = new TestDBConn();
-    $tdb->fetchByTitle("new title", "this is body");
-    $tdb->addPost("my new title", "new body", "test url");
-    ?>
-</body>
+$app->router->get('/', function () {
+    echo "got to home page";
+});
 
-</html>
+$app->run();
