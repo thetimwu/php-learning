@@ -29,6 +29,32 @@ class Router
             exit;
         }
 
-        echo call_user_func($callback);
+        if (is_string($callback)) {
+            echo $this->renderView($callback);
+            return;
+        }
+
+        return call_user_func($callback);
+    }
+
+    public function renderView($view, $params = [])
+    {
+        $layoutContent = $this->layoutContent();
+        $viewContent = $this->renderViewOnly($view, $params);
+        return str_replace('{{content}}', $viewContent, $layoutContent);
+    }
+
+    protected function layoutContent()
+    {
+        ob_start();
+        include_once Application::$ROOT_DIR . "\\views\layouts\main.php";
+        return ob_get_clean();
+    }
+
+    protected function renderViewOnly($view, $params = [])
+    {
+        ob_start();
+        include_once Application::$ROOT_DIR . "\\views\\$view.php";
+        return ob_get_clean();
     }
 }
