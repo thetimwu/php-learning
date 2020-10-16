@@ -8,8 +8,6 @@ $app = new Application(__DIR__);
 
 $app->router->get('/', 'homepage');
 
-$app->router->get('/user', function () {
-    echo 'user page';
-});
+$app->router->get('/user', 'user');
 
 $app->run();
