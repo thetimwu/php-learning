@@ -1,1 +1,1 @@
-<h1>User view</h1>
+<h1>User view <?php echo $name ?></h1>
