@@ -4,6 +4,7 @@ namespace App\controllers;
 
 use App\core\Controller;
 use App\core\Request;
+use App\models\RegisterModel;
 
 class AuthController extends Controller
 {
@@ -21,17 +22,25 @@ class AuthController extends Controller
         return;
     }
 
-    public function register()
-    {
-        $this->setLayout('auth');
-        echo $this->render('register');
-        return;
-    }
-
-    public function handleRegister(Request $request)
+    public function register(Request $request)
     {
         $body = $request->getBody();
-        var_dump($body);
-        return;
+        $registerModel = new RegisterModel();
+        if ($request->isPost()) {
+            $registerModel->loadData($body);
+            $registerModel->validate();
+            var_dump($registerModel->errors);
+            // if ($registerModel->validate($rules) && $registerModel->register()) {
+            //     echo 'success';
+            // }
+            // var_dump($body);
+            return;
+        }
+
+        if ($request->isGet()) {
+            $this->setLayout('auth');
+            echo $this->render('register');
+            return;
+        }
     }
 }
