@@ -76,7 +76,7 @@ class Router
         foreach ($params as $key => $val) {
             $$key = $val;
         }
-        // by doing so, the new variable is avaible in the view page
+        // by doing so, the new variables are avaible in the view page
         ob_start();
         include_once Application::$ROOT_DIR . "\\views\\$view.php";
         return ob_get_clean();
