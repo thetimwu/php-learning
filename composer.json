@@ -8,7 +8,8 @@
     }
   ],
   "require": {
-    "illuminate/database": "^7.20"
+    "illuminate/database": "^7.20",
+    "vlucas/phpdotenv": "^5.2"
   },
   "autoload": {
     "psr-4": {
