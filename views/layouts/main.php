@@ -36,14 +36,24 @@ use App\core\Application;
                 </li>
             </ul>
             <div class="form-inline my-2 my-lg-0">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/login">Login <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/register">Register <span class="sr-only">(current)</span></a>
-                    </li>
-                </ul>
+                <?php if (Application::isGuest()) : ?>
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/login">Login <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/register">Register <span class="sr-only">(current)</span></a>
+                        </li>
+                    </ul>
+                <?php else : ?>
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/logout">Welcome <?php echo Application::$app->user->getDisplayName() ?>
+                                (Logout)
+                            </a>
+                        </li>
+                    </ul>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
