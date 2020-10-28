@@ -2,7 +2,8 @@
 
 namespace App\core;
 
-use PhpParser\Node\Stmt\TryCatch;
+use App\core\db\DBModel;
+use App\core\db\Database;
 
 class Application
 {
@@ -16,7 +17,7 @@ class Application
     public ?controller $controller = null;
     public Database $db;
     public Session $session;
-    public ?DBModel $user;
+    public ?UserModel $user;
     public View $view;
 
     public function __construct($rootPath, array $config)
@@ -54,7 +55,7 @@ class Application
         }
     }
 
-    public function login(DBModel $user)
+    public function login(UserModel $user)
     {
         $this->user = $user;
         $primaryKey = $user->primaryKey();
