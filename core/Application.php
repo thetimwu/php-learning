@@ -2,18 +2,22 @@
 
 namespace App\core;
 
+use PhpParser\Node\Stmt\TryCatch;
+
 class Application
 {
+    public string $layout = 'main';
     public string $userclass;
     public Router $router;
     public Request $request;
     public Response $response;
     public static string $ROOT_DIR;
     public static Application $app;
-    public controller $controller;
+    public ?controller $controller = null;
     public Database $db;
     public Session $session;
     public ?DBModel $user;
+    public View $view;
 
     public function __construct($rootPath, array $config)
     {
@@ -25,6 +29,7 @@ class Application
         $this->controller = new Controller();
         $this->db = new Database($config['db']);
         $this->session = new Session();
+        $this->view = new View();
 
         $this->userclass = $config['userClass'];
         $primaryValue = $this->session->get('user');
@@ -38,7 +43,15 @@ class Application
 
     public function run()
     {
-        $this->router->resolve();
+        try {
+            //code...
+            $this->router->resolve();
+        } catch (\Exception $e) {
+            $this->response->setStatusCode($e->getCode());
+            echo Application::$app->view->renderView('_error', [
+                'exception' => $e
+            ]);
+        }
     }
 
     public function login(DBModel $user)

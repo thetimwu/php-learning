@@ -2,6 +2,8 @@
 
 namespace App\core;
 
+use App\core\exception\NotFoundException;
+
 class Router
 {
     protected array $routes = [];
@@ -32,53 +34,29 @@ class Router
         $callback = $this->routes[$method][$path] ?? false;
 
         if ($callback === false) {
-            Application::$app->response->setStatusCode(404);
-            echo $this->renderView('_404');
+            // Application::$app->response->setStatusCode(404);
+            // echo $this->renderView('_404');
+            throw new NotFoundException();
             return;
         }
 
         if (is_string($callback)) {
-            echo $this->renderView($callback);
+            echo Application::$app->view->renderView($callback);
             return;
         }
 
         if (is_array($callback)) {
-            Application::$app->controller = new $callback[0]();
-            $callback[0] = Application::$app->controller;
+            /** @var \App\core\Controller $controller */
+            $controller = new $callback[0]();
+            Application::$app->controller = $controller;
+            $controller->action = $callback[1];
+            $callback[0] = $controller;
+
+            foreach ($controller->getMiddlewares() as $middleware) {
+                $middleware->execute();
+            }
         }
 
         return call_user_func($callback, $this->request, $this->response);
-    }
-
-    public function renderView($view, $params = [])
-    {
-        $layoutContent = $this->layoutContent();
-        $viewContent = $this->renderViewOnly($view, $params);
-        return str_replace('{{content}}', $viewContent, $layoutContent);
-    }
-
-    public function renderContent($content)
-    {
-        $layoutContent = $this->layoutContent();
-        return str_replace('{{content}}', $content, $layoutContent);
-    }
-
-    protected function layoutContent()
-    {
-        $layout = Application::$app->controller->layout;
-        ob_start();
-        include_once Application::$ROOT_DIR . "\\views\layouts\\$layout.php";
-        return ob_get_clean();
-    }
-
-    protected function renderViewOnly($view, $params = [])
-    {
-        foreach ($params as $key => $val) {
-            $$key = $val;
-        }
-        // by doing so, the new variables are avaible in the view page
-        ob_start();
-        include_once Application::$ROOT_DIR . "\\views\\$view.php";
-        return ob_get_clean();
     }
 }

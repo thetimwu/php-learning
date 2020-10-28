@@ -1,3 +1,9 @@
+<?php
+
+/** @var $this-> \App\core\View */
+$this->title = "Contact";
+?>
+<h1>Contact Us</h1>
 <form action="/contact" method="POST">
     <div class="form-group">
         <label for="exampleFormControlInput1">Subject</label>
