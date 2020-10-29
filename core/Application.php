@@ -7,6 +7,11 @@ use App\core\db\Database;
 
 class Application
 {
+    const EVENT_BEFORE_REQUEST = 'beforeRequest';
+    const EVENT_AFTER_REQUEST = 'afterRequest';
+
+    protected array $eventListeners = [];
+
     public string $layout = 'main';
     public string $userclass;
     public Router $router;
@@ -44,6 +49,8 @@ class Application
 
     public function run()
     {
+        $this->triggerEvent(self::EVENT_BEFORE_REQUEST);
+
         try {
             //code...
             $this->router->resolve();
@@ -73,5 +80,19 @@ class Application
     public static function isGuest()
     {
         return !self::$app->user;
+    }
+
+    public function on($eventName, $callback)
+    {
+        $this->eventListeners[$eventName][] = $callback;
+    }
+
+    public function triggerEvent($eventName)
+    {
+        $callbacks = $this->eventListeners[$eventName] ?? [];
+
+        foreach ($callbacks as $callback) {
+            call_user_func($callback);
+        }
     }
 }

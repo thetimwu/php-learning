@@ -19,6 +19,9 @@ $config = [
 ];
 
 $app = new Application(__DIR__, $config);
+$app->on(Application::EVENT_BEFORE_REQUEST, function () {
+    echo "Before request";
+});
 
 $app->router->get('/', 'homepage');
 
